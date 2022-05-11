@@ -117,25 +117,26 @@ if len(error_link)>0:
 
 
 #step3: 
-# import psycopg2
-# import pandas.io.sql as psql
-# connection = psycopg2.connect(user="postgres",
-#                                 password="12344321",
-#                                 host="10.32.141.17",
-#                                 port="5432",
-#                                 database="sibche")
-# cursor = connection.cursor()
+import psycopg2
+import pandas.io.sql as psql
+connection = psycopg2.connect(user="postgres",
+                                password="12344321",
+                                host="10.32.141.17",
+                                port="5432",
+                                database="sibche")
+cursor = connection.cursor()
 
-# df0= psql.read_sql("SELECT * FROM public.sibche_meta", connection)
-# print(len(df0))
-
-# if connection:
-#     cursor.close()
-#     connection.close()
-# df0.drop_duplicates(subset =["content_link"],
-#                     keep = 'last', inplace = True)
-# print(len(df0))
-# engine = create_engine('postgresql://postgres:12344321@10.32.141.17/sibche',pool_size=20, max_overflow=100,)
-# con=engine.connect()
-# df0.to_sql('sibche_meta'+str(date_a.date()).replace('-','')+str(date_a.time()).split(':')[0],con,if_exists='append', index=False)
-# con.close()
+df0= psql.read_sql("SELECT * FROM public.sibche_meta", connection)
+print(len(df0))
+cursor.execute("DELETE FROM public.sibche_meta")
+connection.commit()
+if connection:
+    cursor.close()
+    connection.close()
+df0.drop_duplicates(subset =["content_link"],
+                    keep = 'last', inplace = True)
+print(len(df0))
+engine = create_engine('postgresql://postgres:12344321@10.32.141.17/sibche',pool_size=20, max_overflow=100,)
+con=engine.connect()
+df0.to_sql('sibche_meta'+str(date_a.date()).replace('-','')+str(date_a.time()).split(':')[0],con,if_exists='append', index=False)
+con.close()
